@@ -4,24 +4,29 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: #
+  workflow_dispatch:
 
 jobs:
   translate:
     runs-on: ubuntu-latest
+    # Important : Donner les permissions d'écriture pour que l'action puisse créer les fichiers traduits
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Passage à la v4 (plus récente)
+        with:
+          fetch-depth: 0 # Récupère tout l'historique pour que 'git diff' fonctionne
 
       - name: Run Translation Action
         uses: imaun/gpt-translate-action@v1.9.0
         with:
           api_key: ${{ secrets.GEMINI_API_KEY }}
-          ai_service: "gemini"  # Options: openai, gemini, claude, azure
-          ai_model: "gemini-pro"      # Specify model (e.g., gemini-pro, claude-v1)
+          ai_service: "gemini"
+          ai_model: "gemini-1.5-flash" # Utilisation d'un modèle Gemini valide
           target_lang: "French"
           target_lang_code: "fr"
           file_exts: "md,json,txt"
           output_format: "translated_*.{ext}"
-          base_branch: main # Default is GITHUB_BASE_REF from env
+          base_branch: main
