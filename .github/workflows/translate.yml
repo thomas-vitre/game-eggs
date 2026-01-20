@@ -22,6 +22,6 @@ jobs:
           ai_model: "gemini-pro"      # Specify model (e.g., gemini-pro, claude-v1)
           target_lang: "French"
           target_lang_code: "fr"
-          file_extensions: "md,json,txt"
+          file_exts: "md,json,txt"
           output_format: "translated_*.{ext}"
           base_branch: main # Default is GITHUB_BASE_REF from env
