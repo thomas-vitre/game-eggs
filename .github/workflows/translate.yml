@@ -1,32 +1,35 @@
-name: Translate Files
+name: Global Translation with Gemini
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_dispatch: # Déclenchement manuel uniquement pour éviter de tout retraduire à chaque push
 
 jobs:
-  translate:
+  translate-all:
     runs-on: ubuntu-latest
-    # Important : Donner les permissions d'écriture pour que l'action puisse créer les fichiers traduits
     permissions:
       contents: write
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4 # Passage à la v4 (plus récente)
-        with:
-          fetch-depth: 0 # Récupère tout l'historique pour que 'git diff' fonctionne
+        uses: actions/checkout@v4
 
-      - name: Run Translation Action
-        uses: imaun/gpt-translate-action@v1.9.0
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          api_key: ${{ secrets.GEMINI_API_KEY }}
-          ai_service: "gemini"
-          ai_model: "gemini-1.5-flash" # Utilisation d'un modèle Gemini valide
-          target_lang: "French"
-          target_lang_code: "fr"
-          file_exts: "md,json,txt"
-          output_format: "translated_*.{ext}"
-          base_branch: main
+          python-version: '3.10'
+
+      - name: Install Gemini Library
+        run: pip install -q -U google-generativeai
+
+      - name: Run Global Translation
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python .github/scripts/translate_all.py
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "Gemini Translator"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Traduction complète du dépôt par Gemini" || echo "Aucun changement"
+          git push
