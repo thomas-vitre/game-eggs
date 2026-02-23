@@ -2,6 +2,7 @@ import os
 import json
 import time
 import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 # Configuration de l'API Gemini
 API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -13,6 +14,14 @@ genai.configure(api_key=API_KEY)
 
 # Utilisation du modèle Flash qui est rapide et adapté aux traductions
 model = genai.GenerativeModel('gemini-2.5-flash')
+
+# Désactivation des filtres de sécurité (nécessaire pour les scripts techniques de serveurs)
+SAFETY_SETTINGS = {
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+}
 
 # Dossiers à ignorer (pour ne pas traduire les fichiers de config GitHub ou Git)
 EXCLUDED_DIRS = ['.git', '.github']
@@ -41,14 +50,29 @@ def translate_with_gemini(text: str, context_type: str) -> str:
         return text
 
     try:
-        response = model.generate_content(prompt)
-        # Petite pause pour éviter de toucher les limites de requêtes (Rate Limiting) de l'API gratuite
-        time.sleep(2) 
+        # Ajout des règles de sécurité
+        response = model.generate_content(prompt, safety_settings=SAFETY_SETTINGS)
+        # Petite pause réduite pour les comptes Pro
+        time.sleep(0.5) 
+        
         if response.text:
-            return response.text.strip()
-        return text
+            result = response.text.strip()
+            
+            # Nettoyage des balises parasites si l'IA en ajoute
+            if result.startswith("```markdown"):
+                result = result[11:].strip()
+            elif result.startswith("```"):
+                result = result[3:].strip()
+            
+            if result.endswith("```"):
+                result = result[:-3].strip()
+                
+            return result
+        else:
+            print("  [!] Avertissement : L'API a renvoyé une réponse vide.")
+            return text
     except Exception as e:
-        print(f"Erreur lors de la traduction : {e}")
+        print(f"  [X] Erreur API lors de la traduction : {e}")
         return text # En cas d'erreur, on retourne le texte original pour ne rien casser
 
 def process_markdown(filepath: str):
@@ -60,37 +84,44 @@ def process_markdown(filepath: str):
     translated_content = translate_with_gemini(content, "markdown")
 
     if translated_content and translated_content != content:
+        print(f"  -> [Succès] Fichier {filepath} traduit et mis à jour.")
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(translated_content)
+    else:
+        print(f"  -> [Ignoré] Aucune modification pour {filepath}.")
 
-def process_json_data(data):
+def process_json_data(data, filepath):
     """Parcourt récursivement un objet JSON pour traduire les clés 'description'."""
     if isinstance(data, dict):
         for key, value in data.items():
             if key.lower() == "description" and isinstance(value, str):
+                print(f"  -> Traduction d'une description trouvée...")
                 data[key] = translate_with_gemini(value, "json_description")
             else:
-                data[key] = process_json_data(value)
+                data[key] = process_json_data(value, filepath)
     elif isinstance(data, list):
         for i in range(len(data)):
-            data[i] = process_json_data(data[i])
+            data[i] = process_json_data(data[i], filepath)
     return data
 
 def process_json_file(filepath: str):
     """Lit, traduit les descriptions et sauvegarde un fichier JSON."""
-    print(f"Analyse du fichier JSON : {filepath}")
+    print(f"\nAnalyse du fichier JSON : {filepath}")
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
         
-        translated_data = process_json_data(data)
+        # On passe le filepath pour les logs
+        translated_data = process_json_data(data, filepath)
         
         with open(filepath, 'w', encoding='utf-8') as f:
             # indent=4 permet de conserver une belle structure JSON
             json.dump(translated_data, f, indent=4, ensure_ascii=False)
             
     except json.JSONDecodeError:
-        print(f"Ignoré (JSON invalide) : {filepath}")
+        print(f"  [!] Ignoré (JSON invalide) : {filepath}")
+    except Exception as e:
+        print(f"  [X] Erreur de lecture/écriture sur {filepath}: {e}")
 
 def main():
     """Point d'entrée du script qui parcourt le répertoire."""
@@ -105,6 +136,7 @@ def main():
             filepath = os.path.join(dirpath, filename)
             
             if filename.endswith(".md"):
+                print(f"\nAnalyse du fichier Markdown : {filepath}")
                 process_markdown(filepath)
             elif filename.endswith(".json"):
                 process_json_file(filepath)
