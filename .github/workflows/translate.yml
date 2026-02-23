@@ -1,35 +1,39 @@
-name: Global Translation with Gemini
+name: Traduction en Français (Gemini API)
 
 on:
-  workflow_dispatch: # Déclenchement manuel uniquement pour éviter de tout retraduire à chaque push
+  # Permet de déclencher le workflow manuellement depuis l'onglet "Actions" de GitHub
+  workflow_dispatch: 
 
 jobs:
-  translate-all:
+  translate:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      # Nécessaire pour permettre au bot de pousser les modifications
+      contents: write 
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Configuration de Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Gemini Library
-        run: pip install -q -U google-generativeai
-
-      - name: Run Global Translation
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python .github/scripts/translate_all.py
-
-      - name: Commit and Push
+      - name: Installation des dépendances
         run: |
-          git config --global user.name "Gemini Translator"
-          git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Traduction complète du dépôt par Gemini" || echo "Aucun changement"
-          git push
+          python -m pip install --upgrade pip
+          pip install google-generativeai
+
+      - name: Exécution du script de traduction
+        env:
+          # Le secret doit être configuré dans les paramètres du dépôt
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python .github/scripts/translate_gemini.py
+
+      - name: Commit et Push des changements
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🌍 trad: traduction des fichiers .md et descriptions .json en français via Gemini"
+          branch: main
+          file_pattern: '*.md *.json'
