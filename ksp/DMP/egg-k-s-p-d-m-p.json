@@ -10,20 +10,20 @@
     "description": "Dark Multiplayer mod server for Kerbal Space Program",
     "features": null,
     "docker_images": {
-        "Mono": "ghcr.io\/ptero-eggs\/yolks:mono_latest"
+        "Mono": "ghcr.io/ptero-eggs/yolks:mono_latest"
     },
     "file_denylist": [],
     "startup": "mono DMPServer.exe",
     "config": {
-        "files": "{\r\n    \"Config\/Settings.txt\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"port\": \"{{server.build.default.port}}\",\r\n            \"modpackMode\": \"{{server.build.env.MODPACKMODE}}\",\r\n            \"warpMode\": \"{{server.build.env.WARPMODE}}\",\r\n            \"gameMode\": \"{{server.build.env.GAMEMODE}}\",\r\n            \"gameDifficulty\": \"{{server.build.env.DIFFICULTY}}\",\r\n            \"whitelisted\": \"{{server.build.env.WHITELIST}}\",\r\n            \"serverName\": \"{{server.build.env.SERVERNAME}}\"\r\n        }\r\n    }\r\n}",
+        "files": "{\r\n    \"Config/Settings.txt\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"port\": \"{{server.build.default.port}}\",\r\n            \"modpackMode\": \"{{server.build.env.MODPACKMODE}}\",\r\n            \"warpMode\": \"{{server.build.env.WARPMODE}}\",\r\n            \"gameMode\": \"{{server.build.env.GAMEMODE}}\",\r\n            \"gameDifficulty\": \"{{server.build.env.DIFFICULTY}}\",\r\n            \"whitelisted\": \"{{server.build.env.WHITELIST}}\",\r\n            \"serverName\": \"{{server.build.env.SERVERNAME}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Ready!\"\r\n}",
         "logs": "{}",
-        "stop": "\/exit"
+        "stop": "/exit"
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nV=$(curl -s https:\/\/d-mp.org\/downloads | grep \"DMP Server\" | awk -F 'href=\"' 'NR==2 {print $2}' | awk -F '\"' '{print $1}') # \/builds\/release\/v0.3.8.3\/DMPServer.zip\r\n\r\necho \"Download link: https:\/\/d-mp.org${V}\"\r\ncurl -sSL -o DMPServer.zip https:\/\/d-mp.org${V}\r\n\r\nunzip -o DMPServer.zip\r\nmv DMPServer\/* .\/\r\n\r\nrm -rf DMPServer\r\nrm DMPServer.zip\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
+            "script": "#!/bin/bash\r\n\r\n\r\nmkdir -p /mnt/server\r\ncd /mnt/server\r\n\r\nV=$(curl -s https://d-mp.org/downloads | grep \"DMP Server\" | awk -F 'href=\"' 'NR==2 {print $2}' | awk -F '\"' '{print $1}') # /builds/release/v0.3.8.3/DMPServer.zip\r\n\r\necho \"Download link: https://d-mp.org${V}\"\r\ncurl -sSL -o DMPServer.zip https://d-mp.org${V}\r\n\r\nunzip -o DMPServer.zip\r\nmv DMPServer/* ./\r\n\r\nrm -rf DMPServer\r\nrm DMPServer.zip\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
             "entrypoint": "bash"
         }
     },

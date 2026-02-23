@@ -10,10 +10,10 @@
     "description": "Soldat 2 is a 2D deathmatch shooter with real guns, ragdoll violence and physics-based movement.",
     "features": null,
     "docker_images": {
-        "ghcr.io\/ptero-eggs\/yolks:debian": "ghcr.io\/ptero-eggs\/yolks:debian"
+        "ghcr.io/ptero-eggs/yolks:debian": "ghcr.io/ptero-eggs/yolks:debian"
     },
     "file_denylist": [],
-    "startup": ".\/soldat2 Name={{SERVER_NAME}} Port={{SERVER_PORT}} WebSocketsPort={{WEBSOCKETS_PORT}} WebSocketsRconPort={{RCON_PORT}} MaxPlayers={{MAX_PLAYERS}} ServerPassword={{SERVER_PASSWORD}} RconPassword={{RCON_PASSWORD}}",
+    "startup": "./soldat2 Name={{SERVER_NAME}} Port={{SERVER_PORT}} WebSocketsPort={{WEBSOCKETS_PORT}} WebSocketsRconPort={{RCON_PORT}} MaxPlayers={{MAX_PLAYERS}} ServerPassword={{SERVER_PASSWORD}} RconPassword={{RCON_PASSWORD}}",
     "config": {
         "files": "{\r\n    \"autoconfig.ini\": {\r\n        \"parser\": \"ini\",\r\n        \"find\": {\r\n            \"GameServerConfig.Name\": \"{{env.SERVER_NAME}}\",\r\n            \"GameServerConfig.Port\": \"{{server.build.default.port}}\",\r\n            \"GameServerConfig.WebSocketsPort\": \"{{env.WEBSOCKETS_PORT}}\",\r\n            \"GameServerConfig.WebSocketsRconPort\": \"{{env.RCON_PORT}}\",\r\n            \"GameServerConfig.RconPassword\": \"{{env.RCON_PASSWORD}}\",\r\n            \"GameServerConfig.MaxPlayers\": \"{{env.MAX_PLAYERS}}\",\r\n            \"GameServerConfig.GreetMessage\": \"{{env.GREET_MESSAGE}}\",\r\n            \"GameServerConfig.AdminPlayfabId\": \"{{env.ADMIN_PLAYFAB_ID}}\",\r\n            \"GameServerConfig.ServerPassword\": \"{{env.SERVER_PASSWORD}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"ALL RULES SCRIPTS INITIALIZED\"\r\n}",
@@ -22,8 +22,8 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n\r\n# download & extract server files\r\nwget -O soldat2-linuxserver-release.tar.gz \"https:\/\/dl.thd.vg\/soldat2-linuxserver-release.tar.gz\"\r\ntar -zxf soldat2-linuxserver-release.tar.gz\r\nrm soldat2-linuxserver-release.tar.gz\r\n\r\n# move content to \/mnt\/server\r\nmv soldat2-linuxserver-release\/* soldat2-linuxserver-release\/.* \/mnt\/server 2>\/dev\/null || true\r\nrm -r soldat2-linuxserver-release\r\n\r\ncd \/mnt\/server\r\nchmod +x .\/soldat2\r\n\r\necho -e \"-------------------------------------------------\"\r\necho -e \"Installation completed\"\r\necho -e \"-------------------------------------------------\"",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
+            "script": "#!/bin/bash\r\n\r\n# download & extract server files\r\nwget -O soldat2-linuxserver-release.tar.gz \"https://dl.thd.vg/soldat2-linuxserver-release.tar.gz\"\r\ntar -zxf soldat2-linuxserver-release.tar.gz\r\nrm soldat2-linuxserver-release.tar.gz\r\n\r\n# move content to /mnt/server\r\nmv soldat2-linuxserver-release/* soldat2-linuxserver-release/.* /mnt/server 2>/dev/null || true\r\nrm -r soldat2-linuxserver-release\r\n\r\ncd /mnt/server\r\nchmod +x ./soldat2\r\n\r\necho -e \"-------------------------------------------------\"\r\necho -e \"Installation completed\"\r\necho -e \"-------------------------------------------------\"",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
             "entrypoint": "bash"
         }
     },

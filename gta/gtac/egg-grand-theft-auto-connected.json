@@ -10,10 +10,10 @@
     "description": "Grand Theft Auto Connected is a custom scriptable multiplayer modification for multiple Grand Theft Auto games.",
     "features": null,
     "docker_images": {
-        "ghcr.io\/ptero-eggs\/yolks:debian": "ghcr.io\/ptero-eggs\/yolks:debian"
+        "ghcr.io/ptero-eggs/yolks:debian": "ghcr.io/ptero-eggs/yolks:debian"
     },
     "file_denylist": [],
-    "startup": ".\/Server",
+    "startup": "./Server",
     "config": {
         "files": "{\r\n    \"server.xml\": {\r\n        \"parser\": \"xml\",\r\n        \"find\": {\r\n            \"server.servername\": \"{{server.build.env.SERVERNAME}}\",\r\n            \"server.port\": \"{{server.build.default.port}}\",\r\n            \"server.httpport\": \"{{server.build.default.port}}\",\r\n            \"server.game\": \"{{server.build.env.GAMETYPE}}\",\r\n            \"server.serverbrowser\": \"{{server.build.env.SERVERBROWSER}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Successfully added server\"\r\n}",
@@ -22,8 +22,8 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\ncd \/mnt\/server\r\n\r\n\r\nif [ \"${DL_VERSION}\" == \"latest\" ]; then\r\n    DOWNLOAD_LINK=https:\/\/gtaconnected.com\/downloads\/server\/latest\/linux\r\nelse\r\n    DOWNLOAD_LINK=https:\/\/gtaconnected.com\/downloads\/GTAC-Server-Linux-${DL_VERSION}.tar.gz\r\nfi\r\n\r\nif [ ! -z \"${DOWNLOAD_LINK}\" ]; then \r\n    if curl --output \/dev\/null --silent --head --fail --location ${DOWNLOAD_LINK}; then\r\n        echo -e \"Chosen server version is valid.\"\r\n    else\r\n        echo -e \"Chosen server version is invalid, tried $DOWNLOAD_LINK. Exiting installation\"\r\n        exit 2\r\n    fi\r\nelse\r\n    echo -e \"no download link, stopping installation\"\r\n    exit 3\r\nfi\r\n\r\necho -e \"Downloading ${DL_VERSION} version of the server\"\r\ncurl -sSL ${DOWNLOAD_LINK} -o GTAC.tar.gz\r\necho \"Extracting files\"\r\ntar -xf GTAC.tar.gz\r\n\r\nchmod +x Server\r\nrm GTAC.tar.gz\r\n\r\necho \"Install complete\"",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
+            "script": "#!/bin/bash\r\ncd /mnt/server\r\n\r\n\r\nif [ \"${DL_VERSION}\" == \"latest\" ]; then\r\n    DOWNLOAD_LINK=https://gtaconnected.com/downloads/server/latest/linux\r\nelse\r\n    DOWNLOAD_LINK=https://gtaconnected.com/downloads/GTAC-Server-Linux-${DL_VERSION}.tar.gz\r\nfi\r\n\r\nif [ ! -z \"${DOWNLOAD_LINK}\" ]; then \r\n    if curl --output /dev/null --silent --head --fail --location ${DOWNLOAD_LINK}; then\r\n        echo -e \"Chosen server version is valid.\"\r\n    else\r\n        echo -e \"Chosen server version is invalid, tried $DOWNLOAD_LINK. Exiting installation\"\r\n        exit 2\r\n    fi\r\nelse\r\n    echo -e \"no download link, stopping installation\"\r\n    exit 3\r\nfi\r\n\r\necho -e \"Downloading ${DL_VERSION} version of the server\"\r\ncurl -sSL ${DOWNLOAD_LINK} -o GTAC.tar.gz\r\necho \"Extracting files\"\r\ntar -xf GTAC.tar.gz\r\n\r\nchmod +x Server\r\nrm GTAC.tar.gz\r\n\r\necho \"Install complete\"",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
             "entrypoint": "bash"
         }
     },

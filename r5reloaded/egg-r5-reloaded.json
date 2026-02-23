@@ -10,7 +10,7 @@
     "description": "R5Reloaded - Modded Apex Legends server",
     "features": [],
     "docker_images": {
-        "ghcr.io\/ptero-eggs\/yolks:wine_latest": "ghcr.io\/ptero-eggs\/yolks:wine_latest"
+        "ghcr.io/ptero-eggs/yolks:wine_latest": "ghcr.io/ptero-eggs/yolks:wine_latest"
     },
     "file_denylist": [],
     "startup": "wine64 r5apex_ds.exe -noconsole -port {{SERVER_PORT}} +launchplaylist \"{{PLAYLIST}}\" +hostname \"{{SERVER_NAME}}\" {{ARGS}}",
@@ -22,8 +22,8 @@
     },
     "scripts": {
         "installation": {
-            "script": "# Update package cache and install 7z\r\napt update\r\napt install p7zip-full -y\r\n\r\n# Change to server directory\r\ncd \/mnt\/server || exit 1\r\n\r\n# Download server file\r\necho \"Downloading: ${DL_URL}\"\r\nwget \"${DL_URL}\" -O server_download.7z\r\n\r\n# Extract\r\necho \"Extracting server files\"\r\n7z x server_download.7z\r\n\r\n# Cleanup\r\necho \"Cleaning up\"\r\nrm server_download.7z",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
+            "script": "# Update package cache and install 7z\r\napt update\r\napt install p7zip-full -y\r\n\r\n# Change to server directory\r\ncd /mnt/server || exit 1\r\n\r\n# Download server file\r\necho \"Downloading: ${DL_URL}\"\r\nwget \"${DL_URL}\" -O server_download.7z\r\n\r\n# Extract\r\necho \"Extracting server files\"\r\n7z x server_download.7z\r\n\r\n# Cleanup\r\necho \"Cleaning up\"\r\nrm server_download.7z",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
             "entrypoint": "bash"
         }
     },
@@ -52,7 +52,7 @@
             "name": "Download URL",
             "description": "URL to download R5Reloaded server build from",
             "env_variable": "DL_URL",
-            "default_value": "https:\/\/r5reloaded.com\/server-download",
+            "default_value": "https://r5reloaded.com/server-download",
             "user_viewable": false,
             "user_editable": false,
             "rules": "required|string|max:500",

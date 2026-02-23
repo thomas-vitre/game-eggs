@@ -1,10 +1,10 @@
-# Wine Generic
+# Wine Générique
 
-A generic wine image that can be used to install servers that need wine to run.
-Downloads compressed server files and extracts them to a specified folder in `/mnt/server/`
+Une image Wine générique qui peut être utilisée pour installer des serveurs nécessitant Wine pour fonctionner.
+Télécharge les fichiers compressés du serveur et les extrait dans un dossier spécifié sous `/mnt/server/`
 
-I.E. `INSTALL_DIR` = `server/folder` will unpack the server into `/mnt/server//server/folder/`
+Par ex. `INSTALL_DIR` = `server/folder` décompressera le serveur dans `/mnt/server//server/folder/`
 
-## Install notes
+## Notes d'installation
 
-May require a full custom start command. This is on you to figure out what that is.
+Peut nécessiter une commande de démarrage personnalisée complète. C'est à vous de déterminer laquelle.

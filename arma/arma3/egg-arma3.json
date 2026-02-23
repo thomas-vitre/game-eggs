@@ -12,21 +12,21 @@
         "steam_disk_space"
     ],
     "docker_images": {
-        "ghcr.io\/ptero-eggs\/games:arma3": "ghcr.io\/ptero-eggs\/games:arma3"
+        "ghcr.io/ptero-eggs/games:arma3": "ghcr.io/ptero-eggs/games:arma3"
     },
     "file_denylist": [],
-    "startup": ".\/{{SERVER_BINARY}} -ip=0.0.0.0 -port={{SERVER_PORT}} -profiles=.\/serverprofile -bepath=.\/ -cfg=basic.cfg -config=server.cfg -mod=\\\"{{CLIENT_MODS}}\\\" -serverMod=\\\"{{SERVERMODS}}\\\" \\\"{{STARTUP_PARAMS}}\\\"",
+    "startup": "./{{SERVER_BINARY}} -ip=0.0.0.0 -port={{SERVER_PORT}} -profiles=./serverprofile -bepath=./ -cfg=basic.cfg -config=server.cfg -mod=\\\"{{CLIENT_MODS}}\\\" -serverMod=\\\"{{SERVERMODS}}\\\" \\\"{{STARTUP_PARAMS}}\\\"",
     "config": {
-        "files": "{\r\n    \"server.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"password=\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"\/\/password=\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"password =\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"\/\/password =\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"maxPlayers\": \"maxPlayers = {{env.MAX_PLAYERS}};\",\r\n            \"headlessClients\": \"headlessClients[] = { \\\"127.0.0.1\\\" };\",\r\n            \"localClient\": \"localClient[] = { \\\"127.0.0.1\\\" };\"\r\n        }\r\n    }\r\n}",
+        "files": "{\r\n    \"server.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"password=\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"//password=\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"password =\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"//password =\": \"password = \\\"{{env.SERVER_PASSWORD}}\\\";\",\r\n            \"maxPlayers\": \"maxPlayers = {{env.MAX_PLAYERS}};\",\r\n            \"headlessClients\": \"headlessClients[] = { \\\"127.0.0.1\\\" };\",\r\n            \"localClient\": \"localClient[] = { \\\"127.0.0.1\\\" };\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Host identity created.\"\r\n}",
         "logs": "{}",
         "stop": "^C"
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n\r\n## File: Pterodactyl Arma 3 Egg - egg-arma3.json\r\n## Author: David Wolfe (Red-Thirten)\r\n## Date: 2022\/05\/22\r\n## License: MIT License\r\n## Image to install with is 'ghcr.io\/ptero-eggs\/installers:debian'\r\n\r\n# Install packages. Default packages below are skipped if using image noted above, thus speeding up the install process.\r\napt -y update\r\napt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates\r\n\r\n# Check for valid Steam credentials to download Arma 3 with (requires valid Steam account)\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_USER}\" == \"anonymous\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"INSTALLATION ERROR: A valid REAL Steam account is required to download the Arma 3 Dedicated Server.\"\r\n    echo -e \"\\t(\\\"anonymous\\\" account cannot be used. Game ownership is not required.)\"\r\n    exit 1\r\nfi\r\n\r\n# Download and install SteamCMD\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd \/mnt\/server\/steamapps\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n\r\n# Install game server using SteamCMD\r\n.\/steamcmd.sh +force_install_dir \/mnt\/server \"+login \\\"${STEAM_USER}\\\" \\\"${STEAM_PASS}\\\"\" +app_update ${STEAMCMD_APPID} ${STEAMCMD_EXTRA_FLAGS} validate +quit\r\n\r\n# Set up 32 and 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk{32,64}\r\ncp -v linux32\/steamclient.so \/mnt\/server\/.steam\/sdk32\/steamclient.so\r\ncp -v linux64\/steamclient.so \/mnt\/server\/.steam\/sdk64\/steamclient.so\r\n\r\n# Arma 3 setup\r\ncd \/mnt\/server\/\r\n[[ -f basic.cfg ]] || curl -sSLO ${BASIC_URL}\r\n[[ -f server.cfg ]] || curl -sSLO ${BASIC_URL%\/*}\/server.cfg\r\nchmod 644 basic.cfg server.cfg\r\n\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
-            "entrypoint": "\/bin\/bash"
+            "script": "#!/bin/bash\r\n\r\n## File: Pterodactyl Arma 3 Egg - egg-arma3.json\r\n## Author: David Wolfe (Red-Thirten)\r\n## Date: 2022/05/22\r\n## License: MIT License\r\n## Image to install with is 'ghcr.io/ptero-eggs/installers:debian'\r\n\r\n# Install packages. Default packages below are skipped if using image noted above, thus speeding up the install process.\r\napt -y update\r\napt -y --no-install-recommends install curl lib32gcc-s1 ca-certificates\r\n\r\n# Check for valid Steam credentials to download Arma 3 with (requires valid Steam account)\r\nif [[ \"${STEAM_USER}\" == \"\" ]] || [[ \"${STEAM_USER}\" == \"anonymous\" ]] || [[ \"${STEAM_PASS}\" == \"\" ]]; then\r\n    echo -e \"INSTALLATION ERROR: A valid REAL Steam account is required to download the Arma 3 Dedicated Server.\"\r\n    echo -e \"\\t(\\\"anonymous\\\" account cannot be used. Game ownership is not required.)\"\r\n    exit 1\r\nfi\r\n\r\n# Download and install SteamCMD\r\ncd /tmp\r\nmkdir -p /mnt/server/steamcmd /mnt/server/steamapps\r\ncurl -sSL -o steamcmd.tar.gz https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C /mnt/server/steamcmd\r\ncd /mnt/server/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root /mnt\r\nexport HOME=/mnt/server\r\n\r\n# Install game server using SteamCMD\r\n./steamcmd.sh +force_install_dir /mnt/server \"+login \\\"${STEAM_USER}\\\" \\\"${STEAM_PASS}\\\"\" +app_update ${STEAMCMD_APPID} ${STEAMCMD_EXTRA_FLAGS} validate +quit\r\n\r\n# Set up 32 and 64 bit libraries\r\nmkdir -p /mnt/server/.steam/sdk{32,64}\r\ncp -v linux32/steamclient.so /mnt/server/.steam/sdk32/steamclient.so\r\ncp -v linux64/steamclient.so /mnt/server/.steam/sdk64/steamclient.so\r\n\r\n# Arma 3 setup\r\ncd /mnt/server/\r\n[[ -f basic.cfg ]] || curl -sSLO ${BASIC_URL}\r\n[[ -f server.cfg ]] || curl -sSLO ${BASIC_URL%/*}/server.cfg\r\nchmod 644 basic.cfg server.cfg\r\n\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
+            "entrypoint": "/bin/bash"
         }
     },
     "variables": [
@@ -72,7 +72,7 @@
         },
         {
             "name": "Extra Startup Parameters",
-            "description": "See https:\/\/community.bistudio.com\/wiki\/Arma_3_Startup_Parameters for more info on valid flags for this field. \"-noLogs\" is recommended to prevent console rate-limit warnings.",
+            "description": "See https://community.bistudio.com/wiki/Arma_3_Startup_Parameters for more info on valid flags for this field. \"-noLogs\" is recommended to prevent console rate-limit warnings.",
             "env_variable": "STARTUP_PARAMS",
             "default_value": "-noLogs",
             "user_viewable": true,
@@ -111,8 +111,8 @@
             "field_type": "text"
         },
         {
-            "name": "Disable Mod Downloads\/Updates",
-            "description": "If the Steam account does not own the base Arma 3 game, Steam Workshop mod downloads\/updates will not work. If so, this setting allows disabling of this feature to avoid errors. (1 Disable | 0 Enable)",
+            "name": "Disable Mod Downloads/Updates",
+            "description": "If the Steam account does not own the base Arma 3 game, Steam Workshop mod downloads/updates will not work. If so, this setting allows disabling of this feature to avoid errors. (1 Disable | 0 Enable)",
             "env_variable": "DISABLE_MOD_UPDATES",
             "default_value": "0",
             "user_viewable": false,
@@ -122,7 +122,7 @@
         },
         {
             "name": "Download Creator DLCs",
-            "description": "Downloads\/Updates all the mod files required to run any CDLC during the next Automatic Update. DLCs can be enabled by adding their mod folder name to the Additional Mods startup variable. For example, add \"vn;\" to load the Prairie Fire CDLC. (1 Yes | 0 No)",
+            "description": "Downloads/Updates all the mod files required to run any CDLC during the next Automatic Update. DLCs can be enabled by adding their mod folder name to the Additional Mods startup variable. For example, add \"vn;\" to load the Prairie Fire CDLC. (1 Yes | 0 No)",
             "env_variable": "CDLC",
             "default_value": "0",
             "user_viewable": true,
@@ -132,7 +132,7 @@
         },
         {
             "name": "Modlist File (Exported from A3 Launcher)",
-            "description": "Filename for an exported modlist. This file will be parsed for mod installation and loading. Upload your HTML file to the root directory (eg. \/home\/container\/modlist.html). Leave blank to disable loading mods from a modlist.",
+            "description": "Filename for an exported modlist. This file will be parsed for mod installation and loading. Upload your HTML file to the root directory (eg. /home/container/modlist.html). Leave blank to disable loading mods from a modlist.",
             "env_variable": "MOD_FILE",
             "default_value": "modlist.html",
             "user_viewable": true,
@@ -202,7 +202,7 @@
         },
         {
             "name": "[Advanced] Headless Clients (HC)",
-            "description": "Number of Headless Clients (0 - 5) to launch parallel with the server. Be sure to set the following \"HC Connect Password\" variable if your server is password locked. PLEASE NOTE: Using a headless client is only recommended for advanced users, adds extra overhead to your permitted server resources, and is only beneficial if a properly written, HC compliant, mission file is provided. See https:\/\/community.bistudio.com\/wiki\/Arma_3:_Headless_Client for more info.",
+            "description": "Number of Headless Clients (0 - 5) to launch parallel with the server. Be sure to set the following \"HC Connect Password\" variable if your server is password locked. PLEASE NOTE: Using a headless client is only recommended for advanced users, adds extra overhead to your permitted server resources, and is only beneficial if a properly written, HC compliant, mission file is provided. See https://community.bistudio.com/wiki/Arma_3:_Headless_Client for more info.",
             "env_variable": "HC_NUM",
             "default_value": "0",
             "user_viewable": true,
@@ -222,7 +222,7 @@
         },
         {
             "name": "[Advanced] Clear HC Profiles Cache on Startup",
-            "description": "Deletes all profiles from the \"\/home\/container\/serverprofile\/home\" directory on startup, except for the server's main \"Player\" profile. Recommended to enable when running HCs, because the profiles are generally unused and can cause HCs to crash if they develop errors. (1 Enable | 0 Disable)",
+            "description": "Deletes all profiles from the \"/home/container/serverprofile/home\" directory on startup, except for the server's main \"Player\" profile. Recommended to enable when running HCs, because the profiles are generally unused and can cause HCs to crash if they develop errors. (1 Enable | 0 Disable)",
             "env_variable": "CLEAR_CACHE",
             "default_value": "0",
             "user_viewable": true,
@@ -244,7 +244,7 @@
             "name": "[Advanced] basic.cfg URL",
             "description": "URL to a valid Arma 3 basic.cfg file. The \"Basic\" configuration file is used during server runtime for advanced network performance tuning. Because it is a required file, this URL is used to download it during installation, or if the file is found missing during startup.",
             "env_variable": "BASIC_URL",
-            "default_value": "https:\/\/raw.githubusercontent.com\/ptero-eggs\/game-eggs\/main\/arma\/arma3\/egg-arma3-config\/basic.cfg",
+            "default_value": "https://raw.githubusercontent.com/ptero-eggs/game-eggs/main/arma/arma3/egg-arma3-config/basic.cfg",
             "user_viewable": false,
             "user_editable": false,
             "rules": "required|url",

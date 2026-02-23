@@ -1,6 +1,6 @@
-## Game egg list
+## Liste des eggs de jeu
 
-Below is a categorized list of games with links to their respective server configurations and mod files. Click on each game to explore further.
+Voici une liste catégorisée de jeux avec des liens vers leurs configurations de serveur et fichiers de mod respectifs. Cliquez sur chaque jeu pour en savoir plus.
 
 ---
 
@@ -14,9 +14,9 @@ Below is a categorized list of games with links to their respective server confi
 * [Proving Grounds](./americas_army/proving_grounds)
 
 #### Among Us
-* [BetterCrewLink Server](./among_us/bettercrewlink_server)
-* [Crewlink Server](./among_us/crewlink_server)
-* [Impostor Server](./among_us/impostor_server)
+* [Serveur BetterCrewLink](./among_us/bettercrewlink_server)
+* [Serveur Crewlink](./among_us/crewlink_server)
+* [Serveur Impostor](./among_us/impostor_server)
 
 #### ARK
 * [Survival Ascended](./ark_survival_ascended)
@@ -110,7 +110,7 @@ Below is a categorized list of games with links to their respective server confi
 
 #### [Factorio](./factorio)
 * [Clusterio](./factorio/clusterio)
-* [Factorio Mod Update](./factorio/factorio-modupdate)
+* [Mise à jour de mod Factorio](./factorio/factorio-modupdate)
 
 #### [Fistful of Frags (FoF)](./fof)
 
@@ -138,7 +138,7 @@ Below is a categorized list of games with links to their respective server confi
 * [RAGEMP](./gta/ragemp)
 * [SA-MP](./gta/samp)
 
-#### Half-Life Dedicated Server (HLDS)
+#### Half-Life Serveur Dédié (HLDS)
 * [ReHLDS](./hlds_server/rehlds)
 * [Vanilla](./hlds_server/vanilla)
 * [Half-Life 2: Deathmatch](./half_life_2_deathmatch/)
@@ -171,7 +171,7 @@ Below is a categorized list of games with links to their respective server confi
 
 #### [League Sandbox](./leaguesandbox)
 
-#### Left 4 Dead Series
+#### Série Left 4 Dead
 * [Left 4 Dead](./left4dead)
 * [Left 4 Dead 2](./left4dead_2)
 
@@ -185,7 +185,7 @@ Below is a categorized list of games with links to their respective server confi
 
 
 #### Minecraft
-* [Bedrock Edition](./minecraft/bedrock)
+* [Édition Bedrock](./minecraft/bedrock)
   * [GoMint](./minecraft/bedrock/gomint)
   * [LeviLamina](./minecraft/bedrock/LeviLamina)
   * [LiteLoader](./minecraft/bedrock/LiteLoader-bedrock)
@@ -193,7 +193,7 @@ Below is a categorized list of games with links to their respective server confi
   * [PocketMine-MP](./minecraft/bedrock/pocketmine_mp)
   * [PowerNukkitX](./minecraft/bedrock/PowerNukkitX)
 * [Crossplay](./minecraft/crossplay/purpur-geysermc-floodgate)
-* [Java Edition](./minecraft/java)
+* [Édition Java](./minecraft/java)
   * [CanvasMC](./minecraft/java/canvas-mc)
   * [Cuberite](./minecraft/java/cuberite)
   * [CurseForge](./minecraft/java/curseforge)
@@ -272,6 +272,6 @@ Below is a categorized list of games with links to their respective server confi
 
 ---
 
-For detailed configuration files, mod support, or server setup guides, refer to each game's folder. Please submit issues or pull requests for any improvements or additions.
+Pour les fichiers de configuration détaillés, le support de mods ou les guides de configuration de serveur, référez-vous au dossier de chaque jeu. Veuillez soumettre des problèmes ou des pull requests pour toute amélioration ou ajout.
 
 ---

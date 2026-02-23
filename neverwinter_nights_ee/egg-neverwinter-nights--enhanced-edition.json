@@ -10,10 +10,10 @@
     "description": "Return to the Forgotten Realms in this bestselling Dungeons & Dragons roleplaying game. Combines all the content of Neverwinter Nights Diamond Edition with all-new enhanced features. Includes 100+ hours of award-winning adventures and the tools to create your own!",
     "features": null,
     "docker_images": {
-        "ghcr.io\/ptero-eggs\/yolks:debian": "ghcr.io\/ptero-eggs\/yolks:debian"
+        "ghcr.io/ptero-eggs/yolks:debian": "ghcr.io/ptero-eggs/yolks:debian"
     },
     "file_denylist": [],
-    "startup": "cd bin\/linux-x86 && .\/nwserver-linux -port $SERVER_PORT -userdirectory '\/home\/container\/user' -servername \"${SERVER_NAME}\" -module \"${MODULE_NAME}\" -publicserver \"${IS_PUBLIC}\" -maxclients \"${MAX_CLIENTS}\" -minlevel \"${MIN_LEVEL}\" -maxlevel \"${MAX_LEVEL}\" -pauseandplay \"${PAUSE_AND_PLAY}\" -pvp \"${PVP}\" -servervault \"${SERVER_VAULT}\" -elc \"${ELC}\" -ilr \"${ILR}\" -gametype \"${GAME_TYPE}\" -oneparty \"${ONE_PARTY}\" -difficulty \"${DIFFICULTY}\" -autosaveinterval \"${AUTO_SAVE_INTERVAL}\" -playerpassword \"${PLAYER_PASSWORD}\" -dmpassword \"${DM_PASSWORD}\" -reloadwhenempty \"${RELOAD_WHEN_EMPTY}\"",
+    "startup": "cd bin/linux-x86 && ./nwserver-linux -port $SERVER_PORT -userdirectory '/home/container/user' -servername \"${SERVER_NAME}\" -module \"${MODULE_NAME}\" -publicserver \"${IS_PUBLIC}\" -maxclients \"${MAX_CLIENTS}\" -minlevel \"${MIN_LEVEL}\" -maxlevel \"${MAX_LEVEL}\" -pauseandplay \"${PAUSE_AND_PLAY}\" -pvp \"${PVP}\" -servervault \"${SERVER_VAULT}\" -elc \"${ELC}\" -ilr \"${ILR}\" -gametype \"${GAME_TYPE}\" -oneparty \"${ONE_PARTY}\" -difficulty \"${DIFFICULTY}\" -autosaveinterval \"${AUTO_SAVE_INTERVAL}\" -playerpassword \"${PLAYER_PASSWORD}\" -dmpassword \"${DM_PASSWORD}\" -reloadwhenempty \"${RELOAD_WHEN_EMPTY}\"",
     "config": {
         "files": "{}",
         "startup": "{\r\n    \"done\": \"Server: Module loaded\"\r\n}",
@@ -22,8 +22,8 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n# Neverwinter Nights Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\n# Download the latest version from the Beamdog website\r\nif [ -z \"$NWN_VERSION\" ] || [ \"$NWN_VERSION\" == \"latest\" ]; then\r\n    NWN_VERSION=$(curl -L -s 'https:\/\/registry.hub.docker.com\/v2\/repositories\/beamdog\/nwserver\/tags' | jq -r '[.\"results\"[][\"name\"] | select(test(\"\\\\d*\\\\.\\\\d*$\"))][0]')\r\nfi\r\n\r\ncd \/mnt\/server\r\ncurl -o nwnee.zip -L https:\/\/nwn.beamdog.net\/downloads\/nwnee-dedicated-${NWN_VERSION}.zip\r\nunzip -u nwnee.zip -d .\r\n\r\n# Run the server once to generate default files and directories\r\ncd bin\/linux-x86 && .\/nwserver-linux\r\n\r\n# Copy generated files into the volume and update relevant paths\r\nmv \/root\/.local\/share\/Neverwinter\\ Nights \/mnt\/server\/user\r\nsed -i 's\/\\\/root\\\/.local\\\/share\\\/Neverwinter Nights\/\\\/home\\\/container\\\/user\/g' \/mnt\/server\/user\/nwn.ini\r\nsed -i 's\/\\\/root\\\/.local\\\/share\\\/Neverwinter Nights\/\\\/home\\\/container\\\/user\/g' \/mnt\/server\/user\/nwnplayer.ini\r\nsed -i 's\/\\\/root\\\/.local\\\/share\\\/Neverwinter Nights\/\\\/home\\\/container\\\/user\/g' \/mnt\/server\/user\/settings.tml\r\n\r\necho \"Installation complete.\"",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
+            "script": "#!/bin/bash\r\n# Neverwinter Nights Installation Script\r\n#\r\n# Server Files: /mnt/server\r\n\r\n# Download the latest version from the Beamdog website\r\nif [ -z \"$NWN_VERSION\" ] || [ \"$NWN_VERSION\" == \"latest\" ]; then\r\n    NWN_VERSION=$(curl -L -s 'https://registry.hub.docker.com/v2/repositories/beamdog/nwserver/tags' | jq -r '[.\"results\"[][\"name\"] | select(test(\"\\\\d*\\\\.\\\\d*$\"))][0]')\r\nfi\r\n\r\ncd /mnt/server\r\ncurl -o nwnee.zip -L https://nwn.beamdog.net/downloads/nwnee-dedicated-${NWN_VERSION}.zip\r\nunzip -u nwnee.zip -d .\r\n\r\n# Run the server once to generate default files and directories\r\ncd bin/linux-x86 && ./nwserver-linux\r\n\r\n# Copy generated files into the volume and update relevant paths\r\nmv /root/.local/share/Neverwinter\\ Nights /mnt/server/user\r\nsed -i 's/\\/root\\/.local\\/share\\/Neverwinter Nights/\\/home\\/container\\/user/g' /mnt/server/user/nwn.ini\r\nsed -i 's/\\/root\\/.local\\/share\\/Neverwinter Nights/\\/home\\/container\\/user/g' /mnt/server/user/nwnplayer.ini\r\nsed -i 's/\\/root\\/.local\\/share\\/Neverwinter Nights/\\/home\\/container\\/user/g' /mnt/server/user/settings.tml\r\n\r\necho \"Installation complete.\"",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
             "entrypoint": "bash"
         }
     },
@@ -40,7 +40,7 @@
         },
         {
             "name": "Module Name",
-            "description": "Name of the module we want to load. Official modules are stored in `~\/data` and custom modules need to be stored in `~\/user`. Must match the file name exactly without the extension.",
+            "description": "Name of the module we want to load. Official modules are stored in `~/data` and custom modules need to be stored in `~/user`. Must match the file name exactly without the extension.",
             "env_variable": "MODULE_NAME",
             "default_value": "",
             "user_viewable": true,

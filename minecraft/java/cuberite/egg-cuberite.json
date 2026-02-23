@@ -14,10 +14,10 @@
         "pid_limit"
     ],
     "docker_images": {
-        "ghcr.io\/ptero-eggs\/yolks:debian": "ghcr.io\/ptero-eggs\/yolks:debian"
+        "ghcr.io/ptero-eggs/yolks:debian": "ghcr.io/ptero-eggs/yolks:debian"
     },
     "file_denylist": [],
-    "startup": ".\/Cuberite",
+    "startup": "./Cuberite",
     "config": {
         "files": "{\r\n    \"settings.ini\": {\r\n        \"parser\": \"ini\",\r\n        \"find\": {\r\n            \"Server.Ports\": \"{{server.build.default.port}}\",\r\n            \"Server.Description\": \"{{server.build.env.SERV_DESC}}\"\r\n        }\r\n    },\r\n    \"webadmin.ini\": {\r\n        \"parser\": \"ini\",\r\n        \"find\": {\r\n            \"User:admin.Password\": \"{{server.build.env.ADMIN_PASS}}\",\r\n            \"WebAdmin.Ports\": \"{{server.build.env.WEB_PORT}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Startup complete\"\r\n}",
@@ -26,8 +26,8 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\r\n# Cuberite\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\ncd \/mnt\/server\r\n\r\nARCH=$([[ \"$(uname -m)\" == \"x86_64\" ]] && echo \"x86_64\" || echo \"aarch64\")\r\n\r\nwget https:\/\/download.cuberite.org\/linux-${ARCH}\/Cuberite.tar.gz\r\n\r\ntar -xzf Cuberite.tar.gz\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
-            "container": "ghcr.io\/ptero-eggs\/installers:debian",
+            "script": "#!/bin/ash\r\n# Cuberite\r\n#\r\n# Server Files: /mnt/server\r\n\r\ncd /mnt/server\r\n\r\nARCH=$([[ \"$(uname -m)\" == \"x86_64\" ]] && echo \"x86_64\" || echo \"aarch64\")\r\n\r\nwget https://download.cuberite.org/linux-${ARCH}/Cuberite.tar.gz\r\n\r\ntar -xzf Cuberite.tar.gz\r\n\r\n## install end\r\necho \"-----------------------------------------\"\r\necho \"Installation completed...\"\r\necho \"-----------------------------------------\"",
+            "container": "ghcr.io/ptero-eggs/installers:debian",
             "entrypoint": "bash"
         }
     },
